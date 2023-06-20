@@ -5,6 +5,8 @@ node{
   }
   stage('SECURIN ASPM SCAN'){
     checkout scm
+    def ecrUrl = '${env.ECR_URL}'
+    echo "ECR URL::: ${ecrUrl}"
     def testscan = load "aspmcli-vmaas.groovy"
     def cliScanStatus = testscan.runAspmScan()
     echo "${cliScanStatus}"
