@@ -4,7 +4,8 @@ def ecrUrl = '${env.ECR_URL}'
 def runAspmScan() {
 	echo "Inside Run ASPM Scan" 
 	withEnv(["AWS_ECR_URL=${ECR_URL}"]) {
-withDockerRegistry(credentialsId: 'ecr:us-west-2:0e60ebb5-69fa-47b0-8e1d-0dc79c3ed1df', url: '$AWS_ECR_URL'){
+	echo "url ::: ${AWS_ECR_URL}"
+withDockerRegistry(credentialsId: 'ecr:us-west-2:0e60ebb5-69fa-47b0-8e1d-0dc79c3ed1df', url: '${AWS_ECR_URL}'){
     sh script: "set +x; docker pull -q securin-aspm-cli:latest & > /dev/null"
     echo "ASPM Image pulled"
     sh script: "set +x; docker container create --name temp -v '${env.WORKSPACE}':/workdir ${aspmCliImageWithTag}"
