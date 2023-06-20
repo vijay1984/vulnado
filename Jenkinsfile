@@ -9,6 +9,7 @@ node{
   }
   stage('SECURIN ASPM SCAN'){
     aspmCli = load "aspmcli-vmaas.groovy"
+    echo ${aspmCli}
     def cliScanStatus = aspmCli.runAspmScan()
     echo ${cliScanStatus}
   }
