@@ -14,7 +14,7 @@ node{
     def cliScanStatus = aspmCliScan.runAspmScan()
     echo "${cliScanStatus}"
   }
-  //Below stage to be called after docker build is completed.
+  //Below stage to be called after the docker build is completed.
   stage('SECURIN ASPM CONTAINER SCAN'){
     def cliScanStatus = aspmCliScan.runContainerScan("dockerImageName")
     echo "${cliScanStatus}"
