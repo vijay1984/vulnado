@@ -8,7 +8,7 @@ node{
     sh "${maven}/bin/mvn package"
   }
   stage('SECURIN ASPM SCAN'){
-    checkout([$class: 'GitSCM', branches: [[name: "master"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'JenkinsFile']], submoduleCfg: [], userRemoteConfigs: [url: 'https://github.com/YugeshCSW/vulnado.git']])
+    checkout scm
     aspmCli = load "aspmcli-vmaas.groovy"
     echo "${aspmCli}"
     def cliScanStatus = aspmCli.runAspmScan()
