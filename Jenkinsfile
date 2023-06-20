@@ -6,7 +6,6 @@ node{
   stage('SECURIN ASPM SCAN'){
     checkout scm
     def testscan = load "aspmcli-vmaas.groovy"
-    echo "${testscan}"
     def cliScanStatus = testscan.runAspmScan()
     echo "${cliScanStatus}"
   }
