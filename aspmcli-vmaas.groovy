@@ -2,7 +2,7 @@
 String aspmCliImageWithTag = "securin-aspm-cli:latest"
 
 // TO RUN ASPM SCAN
-String  runAspmScan() {
+String  runAspmScan(String test) {
   withDockerRegistry(credentialsId: 'ASPM-CLI', url: ${env.ECR_URL}){
     sh script: "set +x; docker pull -q ${aspmCliImageWithTag} & > /dev/null"
     echo "ASPM Image pulled"
