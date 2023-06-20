@@ -9,13 +9,13 @@ node{
   }
   stage('SECURIN ASPM SCAN'){
     aspmCli = load "aspmcli-vmaas.groovy"
-    echo ${aspmCli}
+    echo "${aspmCli}"
     def cliScanStatus = aspmCli.runAspmScan()
-    echo ${cliScanStatus}
+    echo "${cliScanStatus}"
   }
   //Below stage to be called after docker build is completed.
   stage('SECURIN ASPM CONTAINER SCAN'){
     def cliScanStatus = aspmCli.runContainerScan("dockerImageName")
-    echo ${cliScanStatus}
+    echo "${cliScanStatus}"
   }
 }
