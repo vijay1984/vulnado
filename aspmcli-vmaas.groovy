@@ -5,7 +5,7 @@ def runAspmScan() {
 	echo "Inside Run ASPM Scan" 
 	withEnv(["AWS_ECR_URL=${ECR_URL}"]) {
 	echo "url ::: ${AWS_ECR_URL}"
-	sh "docker login -u AWS -p $(aws ecr get-login-password --region us-west-2) ${AWS_ECR_URL}"	
+	sh "echo '' | docker login --username AWS --password-stdin ${AWS_ECR_URL}"	
 
     sh "docker pull -q securin-aspm-cli:latest"
     echo "ASPM Image pulled"
