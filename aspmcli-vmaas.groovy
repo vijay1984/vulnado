@@ -33,3 +33,4 @@ def runContainerScan(String imageName) {
 	echo "Scan Status ::: ${scanStatus}"
 	return scanStatus
 }
+return this
