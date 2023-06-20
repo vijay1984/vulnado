@@ -8,10 +8,10 @@ def runAspmScan() {
 withDockerRegistry(credentialsId: 'ecr:us-west-2:0e60ebb5-69fa-47b0-8e1d-0dc79c3ed1df', url: "${AWS_ECR_URL}"){
     sh script: "set +x; docker pull -q securin-aspm-cli:latest & > /dev/null"
     echo "ASPM Image pulled"
-    sh script: "set +x; docker container create --name temp -v '${env.WORKSPACE}':/workdir ${aspmCliImageWithTag}"
+    sh script: "set +x; docker container create --name temp -v '${env.WORKSPACE}':/workdir securin-aspm-cli:latest"
     sh script: "set +x; docker cp '${env.WORKSPACE}/.' temp:/workdir"
     echo "Starting ASPM Scan"
-    scanResponse = sh script: "set +x; docker run --name cli --volumes-from temp -v /var/run/docker.sock:/var/run/docker.sock -t ${aspmCliImageWithTag} -is_compiled=true -standalone", returnStdout: true
+    scanResponse = sh script: "set +x; docker run --name cli --volumes-from temp -v /var/run/docker.sock:/var/run/docker.sock -t securin-aspm-cli:latest -is_compiled=true -standalone", returnStdout: true
     echo "Scan Response:::: ${scanResponse}"
     sh script: "set +x; docker cp cli:/workdir/results/status.txt '${env.WORKSPACE}/.'"
     def scanStatus = readFile "'${env.WORKSPACE}'/status.txt"
