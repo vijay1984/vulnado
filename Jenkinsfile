@@ -11,7 +11,7 @@ node{
     checkout scm
     def testscan = load "aspmcli-vmaas.groovy"
     echo "${testscan}"
-    def cliScanStatus = testscan.runAspmScan("test")
+    def cliScanStatus = testscan.runAspmScan()
     echo "${cliScanStatus}"
   }
   //Below stage to be called after the docker build is completed.
