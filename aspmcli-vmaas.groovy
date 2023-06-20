@@ -1,8 +1,10 @@
 // Below Can Be Passed as Parameters From Jenkins Pipeline Script if required:
 // TO RUN ASPM SCAN
+def ecrUrl = '${env.ECR_URL}'
 def runAspmScan() {
-	echo "Inside Run ASPM Scan"  
-withDockerRegistry(credentialsId: 'ecr:us-west-2:0e60ebb5-69fa-47b0-8e1d-0dc79c3ed1df', url: '${env.ECR_URL}'){
+	echo "Inside Run ASPM Scan" 
+	echo "ECR URL::: ${ecrUrl}"
+withDockerRegistry(credentialsId: 'ecr:us-west-2:0e60ebb5-69fa-47b0-8e1d-0dc79c3ed1df', url: '${ecrUrl}'){
     sh script: "set +x; docker pull -q securin-aspm-cli:latest & > /dev/null"
     echo "ASPM Image pulled"
     sh script: "set +x; docker container create --name temp -v '${env.WORKSPACE}':/workdir ${aspmCliImageWithTag}"
