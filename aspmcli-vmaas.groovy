@@ -2,7 +2,7 @@
 // TO RUN ASPM SCAN
 def runAspmScan() {
 	echo "Inside Run ASPM Scan"  
-withDockerRegistry(credentialsId: 'ASPM-CLI', url: ${env.ECR_URL}){
+withDockerRegistry(credentialsId: 'ASPM-CLI', url: '${env.ECR_URL}'){
     sh script: "set +x; docker pull -q securin-aspm-cli:latest & > /dev/null"
     echo "ASPM Image pulled"
     sh script: "set +x; docker container create --name temp -v '${env.WORKSPACE}':/workdir ${aspmCliImageWithTag}"
