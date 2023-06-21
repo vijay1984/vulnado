@@ -9,7 +9,7 @@ def runAspmScan() {
     sh "docker pull ${imageUrl}/securin-aspm-cli:latest"
     echo "ASPM Image pulled"
     echo "Starting ASPM Scan"
-    def scanResponse = sh script: "docker run --name cli -v ${env.WORKSPACE}:/workdir -v /var/run/docker.sock:/var/run/docker.sock -t ${imageUrl} -is_compiled=true -standalone", returnStdout: true
+    def scanResponse = sh script: "docker run --name cli -v ${env.WORKSPACE}:/workdir -v /var/run/docker.sock:/var/run/docker.sock -t ${imageUrl}/securin-aspm-cli:latest -is_compiled=true -standalone", returnStdout: true
     echo "Scan Response:::: ${scanResponse}"
     sh script: "set +x; docker cp cli:/workdir/results/status.txt '${env.WORKSPACE}/.'"
     def scanStatus = readFile "'${env.WORKSPACE}'/status.txt"
