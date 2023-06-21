@@ -7,17 +7,12 @@ def runAspmScan() {
 	sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${AWS_ECR_URL}"
 	def imageUrl = removePrefix("${AWS_ECR_URL}")
     sh "docker pull ${imageUrl}/securin-aspm-cli:latest"
+    String containerName = generateRandomContainerName()
     echo "ASPM Image pulled"
     echo "Starting ASPM Scan"
-    echo "${WORKSPACE}"
-    echo "$WORKSPACE"
-    def scanResponse = sh script: "docker run --name cli -v '${WORKSPACE}':/workdir -v /var/run/docker.sock:/var/run/docker.sock -t ${imageUrl}/securin-aspm-cli:latest -is_compiled=true -standalone", returnStdout: true
+    def scanResponse = sh script: "docker run --name '${containerName}' -v '${WORKSPACE}':/workdir -v /var/run/docker.sock:/var/run/docker.sock -t ${imageUrl}/securin-aspm-cli:latest -is_compiled=true -standalone", returnStdout: true
     echo "Scan Response:::: ${scanResponse}"
-    sh script: "set +x; docker cp cli:/workdir/results/status.txt '${env.WORKSPACE}/.'"
-    def scanStatus = readFile "'${env.WORKSPACE}'/status.txt"
-    echo "Scan Status ::: ${scanStatus}"
-    return scanStatus
-  
+    sh "docker rm -f ${containerName}"
 }
 }
 
@@ -30,14 +25,22 @@ def runContainerScan(String imageName) {
 	if(!imageName?.trim()) {
 		return mandatoryParamErrMsg
 	}
-	sh script: "set +x ; docker rm -f cli-container & > /dev/null"
+	withEnv(["AWS_ECR_URL=${ECR_URL}"]) {
 	echo "Starting ASPM Docker Container Scan"
-	scanResponse = sh script: "set +x ; docker run --name cli-container --volumes-from temp -v /var/run/docker.sock:/var/run/docker.sock ${aspmCliImageWithTag} -upload_log true -image_name ${imageName}", returnStdout: true
+	def imageUrl = removePrefix("${AWS_ECR_URL}")
+	String containerName = generateRandomContainerName()
+	scanResponse = sh script: "docker run --name '$containerName}' -v '${WORKSPACE}':/workdir -v /var/run/docker.sock:/var/run/docker.sock ${imageUrl}/securin-aspm-cli:latest -upload_log true -image_name ${imageName}", returnStdout: true
 	echo "Scan Response:::: ${scanResponse}"
-	sh script: "set +x ; docker rm -f temp"
-	echo "Temp Container Removed"
-	def scanStatus = readFile "${env.WORKSPACE}/status.txt"
-	echo "Scan Status ::: ${scanStatus}"
-	return scanStatus
+	sh "docker rm -f ${containerName}"
+	}
 }
 return this
+
+String generateRandomContainerName() {
+	def length = 16
+	def allChars = ['a'..'z', 'A'..'Z', 0..9].flatten()
+	java.util.Random random = new java.util.Random(java.lang.System.currentTimeMillis())
+	def randomChars = (0..length - 1).collect { allChars[random.nextInt(allChars.size())] }
+	def randomString = randomChars.join('')
+	return randomString
+}
