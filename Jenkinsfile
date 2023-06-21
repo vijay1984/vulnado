@@ -7,13 +7,13 @@ node{
     checkout scm
     def ecrUrl = '${env.ECR_URL}'
     echo "ECR URL::: ${ecrUrl}"
-    def testscan = load "aspmcli-vmaas.groovy"
-    def cliScanStatus = testscan.runAspmScan()
-    echo "${cliScanStatus}"
+    aspmCli = load "aspmcli-vmaas.groovy"
+    def cliScanStatus = aspmCli.runAspmScan()
+    //echo "${cliScanStatus}"
   }
   //Below stage to be called after the docker build is completed.
-  stage('SECURIN ASPM CONTAINER SCAN'){
-    def cliScanStatus = testscan.runContainerScan("dockerImageName")
+  /*stage('SECURIN ASPM CONTAINER SCAN'){
+    def cliScanStatus = aspmCli.runContainerScan("dockerImageName")
     echo "${cliScanStatus}"
-  }
+  }*/
 }
