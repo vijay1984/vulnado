@@ -1,6 +1,5 @@
 // Below Can Be Passed as Parameters From Jenkins Pipeline Script if required:
 // TO RUN ASPM SCAN
-def ecrUrl = '${env.ECR_URL}'
 def runAspmScan() {
 	echo "Inside Run ASPM Scan" 
 	withEnv(["AWS_ECR_URL=${ECR_URL}"]) {
