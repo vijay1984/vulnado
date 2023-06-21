@@ -6,7 +6,7 @@ def runAspmScan() {
 	echo "url ::: ${AWS_ECR_URL}"
 	sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${AWS_ECR_URL}"
 
-    sh "docker pull -q securin-aspm-cli:latest"
+    sh "docker pull ${AWS_ECR_URL}/securin-aspm-cli:latest"
     echo "ASPM Image pulled"
     sh "docker container create --name temp -v '${env.WORKSPACE}':/workdir securin-aspm-cli:latest"
     sh "docker cp '${env.WORKSPACE}/.' temp:/workdir"
