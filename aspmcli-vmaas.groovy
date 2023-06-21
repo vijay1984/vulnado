@@ -5,8 +5,8 @@ def runAspmScan() {
 	withEnv(["AWS_ECR_URL=${ECR_URL}"]) {
 	echo "url ::: ${AWS_ECR_URL}"
 	sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${AWS_ECR_URL}"
-
-    sh "docker pull ${AWS_ECR_URL}/securin-aspm-cli:latest"
+	def imageUrl = removePrefix(${AWS_ECR_URL})
+    sh "docker pull ${imageUrl}/securin-aspm-cli:latest"
     echo "ASPM Image pulled"
     sh "docker container create --name temp -v '${env.WORKSPACE}':/workdir securin-aspm-cli:latest"
     sh "docker cp '${env.WORKSPACE}/.' temp:/workdir"
@@ -19,6 +19,10 @@ def runAspmScan() {
     return scanStatus
   
 }
+}
+
+String removePrefix(String str) {
+	return str.minus("https://")
 }
 
 // TO RUN ASPM DOCKER CONTAINER SCAN
